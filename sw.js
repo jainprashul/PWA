@@ -16,7 +16,18 @@ const assets = [
     'https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
     '/img/icons/icon-144x144.png',
     '/pages/fallback.html'
-]
+];
+
+// cache size limit fn
+const limitCacheSize = (name, size)=> {
+    caches.open(name).then( cache => {
+        cache.keys().then( keys=> {
+            if(keys.length > size){
+                cache.delete(keys[0]).then(limitCacheSize(name,size));
+            }
+        });
+    });
+};
 
 // ServiceWorker install
 self.addEventListener('install', evt => {
@@ -55,14 +66,21 @@ self.addEventListener('fetch', evt => {
     evt.respondWith(
         caches.match(evt.request).then(cacheRes => {
             return cacheRes || fetch(evt.request).then(fetchReq => {
+                // add the asset to dynamic-cache
                 return caches.open(dynamicCacheName).then(cache => {
                     cache.put(evt.request.url, fetchReq.clone());
+                    // check asset size
+                    limitCacheSize(dynamicCacheName, 15);
                     return fetchReq;
                 })
             });
-        }).catch(()=> caches.match('/pages/fallback.html'))
+        }).catch( ()=> {
+            if(evt.request.url.indexOf('.html') > 1){
+                return caches.match('/pages/fallback.html');
+            }
+        })
 
-    )
+    );
 
 
 });
