@@ -57,23 +57,23 @@ self.addEventListener("activate", evt => {
 self.addEventListener('fetch', evt => {
     // console.log("Page fetched", evt);
     // access with cache files
-    evt.respondWith(
-        caches.match(evt.request).then(cacheRes => {
-            return cacheRes || fetch(evt.request).then(fetchReq => {
-                // add the asset to dynamic-cache
-                return caches.open(dynamicCacheName).then(cache => {
-                    cache.put(evt.request.url, fetchReq.clone());
-                    // check asset size
-                    limitCacheSize(dynamicCacheName, 15);
-                    return fetchReq;
-                })
-            });
-        }).catch(() => {
-            if (evt.request.url.indexOf('.html') > 1) {
-                return caches.match('/pages/fallback.html');
-            }
-        })
-    );
+    // evt.respondWith(
+    //     caches.match(evt.request).then(cacheRes => {
+    //         return cacheRes || fetch(evt.request).then(fetchReq => {
+    //             // add the asset to dynamic-cache
+    //             return caches.open(dynamicCacheName).then(cache => {
+    //                 cache.put(evt.request.url, fetchReq.clone());
+    //                 // check asset size
+    //                 limitCacheSize(dynamicCacheName, 15);
+    //                 return fetchReq;
+    //             })
+    //         });
+    //     }).catch(() => {
+    //         if (evt.request.url.indexOf('.html') > 1) {
+    //             return caches.match('/pages/fallback.html');
+    //         }
+    //     })
+    // );
 
 
 });
