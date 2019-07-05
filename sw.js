@@ -1,7 +1,5 @@
 const staticCacheName = 'site-static-v3';
 const dynamicCacheName = 'site-dynamic-v1';
-
-
 const assets = [
     './',
     './index.html',
@@ -14,16 +12,15 @@ const assets = [
     './manifest.json',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
-    '/img/icons/icon-144x144.png',
     '/pages/fallback.html'
 ];
 
 // cache size limit fn
-const limitCacheSize = (name, size)=> {
-    caches.open(name).then( cache => {
-        cache.keys().then( keys=> {
-            if(keys.length > size){
-                cache.delete(keys[0]).then(limitCacheSize(name,size));
+const limitCacheSize = (name, size) => {
+    caches.open(name).then(cache => {
+        cache.keys().then(keys => {
+            if (keys.length > size) {
+                cache.delete(keys[0]).then(limitCacheSize(name, size));
             }
         });
     });
@@ -31,7 +28,13 @@ const limitCacheSize = (name, size)=> {
 
 // ServiceWorker install
 self.addEventListener('install', evt => {
-    console.log("Service worker has been Installed");
+    //console.log("Service worker has been Installed");
+    // saving the cache files
+    evt.waitUntil(
+        caches.open(staticCacheName).then(cache => {
+            cache.addAll(assets);
+        })
+    );
 });
 
 // activate worker
@@ -53,15 +56,6 @@ self.addEventListener("activate", evt => {
 // fetch event
 self.addEventListener('fetch', evt => {
     // console.log("Page fetched", evt);
-
-    // saving the cache files
-    evt.waitUntil(
-        caches.open(staticCacheName).then(cache => {
-            cache.addAll(assets);
-        })
-    );
-
-
     // access with cache files
     evt.respondWith(
         caches.match(evt.request).then(cacheRes => {
@@ -74,12 +68,11 @@ self.addEventListener('fetch', evt => {
                     return fetchReq;
                 })
             });
-        }).catch( ()=> {
-            if(evt.request.url.indexOf('.html') > 1){
+        }).catch(() => {
+            if (evt.request.url.indexOf('.html') > 1) {
                 return caches.match('/pages/fallback.html');
             }
         })
-
     );
 
 
