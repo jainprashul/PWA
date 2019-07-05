@@ -1,18 +1,19 @@
-document.addEventListener("DOMContentLoaded", ()=> {
+document.addEventListener("DOMContentLoaded", () => {
 
-    // nav menu
-    const menus = document.querySelector('.side-menu');
-    M.Sidenav.init(menus, {edge: 'right'});
+  // nav menu
+  const menus = document.querySelector('.side-menu');
+  M.Sidenav.init(menus, { edge: 'right' });
 
-    // recipe form
-    const forms = document.querySelector('.side-form');
-    M.Sidenav.init(forms, {edge: 'left'});
+  // recipe form
+  const forms = document.querySelector('.side-form');
+  M.Sidenav.init(forms, { edge: 'left' });
 
 });
 
+// display recipes in ui
 const recipes = document.querySelector('.recipes');
 const renderRecipes = (data, id) => {
-    const html = `
+  const html = `
     <!-- recipe card -->
     <div class=" card-panel recipe white row" data-id="${id}">
       <img src="/img/dish.png" alt="recipe thumb" />
@@ -25,5 +26,12 @@ const renderRecipes = (data, id) => {
       </div>
     </div>
     `;
-    recipes.innerHTML += html;
+  recipes.innerHTML += html;
 }
+
+// delete in ui
+const removeRecipe = (id) => {
+  const recipe = document.querySelector(`.recipe[data-id=${id}]`);
+  console.log(recipe);
+  recipe.remove()
+};

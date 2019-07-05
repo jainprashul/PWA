@@ -1,5 +1,5 @@
-const staticCacheName = 'site-static-v3';
-const dynamicCacheName = 'site-dynamic-v1';
+const staticCacheName = 'site-static-v7';
+const dynamicCacheName = 'site-dynamic-v5';
 const assets = [
     './',
     './index.html',
@@ -58,7 +58,7 @@ self.addEventListener('fetch', evt => {
     // console.log("Page fetched", evt);
     // access with cache files
     // run this only if the it does not contain firebase api response
-    if(evt.request.url.indexOf("firebase.googleapis.com") === -1){
+    if(evt.request.url.indexOf("firestore.googleapis.com") === -1){
         evt.respondWith(
             caches.match(evt.request).then(cacheRes => {
                 return cacheRes || fetch(evt.request).then(fetchReq => {
