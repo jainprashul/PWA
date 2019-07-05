@@ -9,3 +9,4 @@ document.addEventListener("DOMContentLoaded", ()=> {
     M.Sidenav.init(forms, {edge: 'left'});
 
 });
+
