@@ -1,3 +1,15 @@
+// offine approach
+db.enablePersistence().catch(err => {
+    if(err.code == "failed-precondition"){
+        // due to multiple tabs opened
+        console.log("Persistence failed");
+    } 
+    else if(err.code == "unimplemented"){
+        // due to lack of browser support
+        console.log("Persistence not available");
+    } 
+} )
+
 // real- time listener
 
 db.collection('recipes').onSnapshot((snapshot) => {
